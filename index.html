@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>NovaVault</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Inter,Arial;
+background:#0f1221;
+color:white;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 8%;
+background:#070a16;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+color:#00e0ff;
+}
+
+nav a{
+margin-left:18px;
+cursor:pointer;
+}
+
+section{
+display:none;
+padding:50px 8%;
+}
+
+.active{display:block}
+
+.hero{
+text-align:center;
+padding:120px 20px;
+}
+
+button{
+background:#00e0ff;
+border:none;
+padding:10px 18px;
+border-radius:6px;
+cursor:pointer;
+margin-top:10px;
+}
+
+input{
+padding:10px;
+margin:10px 0;
+border-radius:6px;
+border:none;
+width:260px;
+}
+
+.dashboard{
+display:flex;
+gap:30px;
+}
+
+.sidebar{
+width:230px;
+background:#070a16;
+padding:20px;
+border-radius:10px;
+}
+
+.sidebar div{
+margin:12px 0;
+cursor:pointer;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+
+.card{
+background:#171b35;
+padding:20px;
+border-radius:10px;
+}
+
+.walletBox{
+background:#171b35;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+.chart{
+height:200px;
+display:flex;
+align-items:flex-end;
+gap:8px;
+margin-top:20px;
+}
+
+.bar{
+width:18px;
+background:#00e0ff;
+}
+
+.cardDisplay{
+background:linear-gradient(135deg,#00e0ff,#004cff);
+padding:20px;
+border-radius:14px;
+width:320px;
+}
+
+.transactions li{
+margin:6px 0;
+}
+
+.toggle{
+cursor:pointer;
+padding:6px 10px;
+background:#171b35;
+border-radius:6px;
+margin-left:20px;
+}
+
+.light{
+background:white;
+color:black;
+}
+
+.light .card,
+.light .walletBox,
+.light .sidebar{
+background:#f0f0f0;
+}
+
+footer{
+text-align:center;
+padding:30px;
+background:#070a16;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">NovaVault</div>
+
+<nav>
+<a onclick="show('home')">Home</a>
+<a onclick="show('login')">Login</a>
+<span class="toggle" onclick="toggleTheme()">Theme</span>
+</nav>
+
+</header>
+
+<section id="home" class="active">
+
+<div class="hero">
+
+<h1>NovaVault Digital Finance</h1>
+<p>Wallets, investing, cards and analytics in one platform.</p>
+
+<button onclick="show('signup')">Create Account</button>
+
+</div>
+
+</section>
+
+<section id="signup">
+
+<h2>Create Account</h2>
+
+<input id="signupEmail" placeholder="Email">
+<input id="signupPass" type="password" placeholder="Password">
+
+<button onclick="signup()">Open Wallet</button>
+
+</section>
+
+<section id="login">
+
+<h2>Login</h2>
+
+<input id="loginEmail" placeholder="Email">
+<input id="loginPass" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</section>
+
+<section id="dashboard">
+
+<div class="dashboard">
+
+<div class="sidebar">
+
+<h3>Menu</h3>
+
+<div onclick="dash('overview')">Overview</div>
+<div onclick="dash('wallets')">Wallets</div>
+<div onclick="dash('deposit')">Deposit</div>
+<div onclick="dash('transfer')">Transfer</div>
+<div onclick="dash('invest')">Invest</div>
+<div onclick="dash('cards')">Cards</div>
+<div onclick="dash('activity')">Activity</div>
+<div onclick="logout()">Logout</div>
+
+</div>
+
+<div style="flex:1">
+
+<div id="overview" class="dashpage">
+
+<div class="walletBox">
+
+<h2>Total Balance</h2>
+<h1 id="balance">$0</h1>
+
+</div>
+
+<h3>Analytics</h3>
+
+<div class="chart" id="chart"></div>
+
+</div>
+
+<div id="wallets" class="dashpage" style="display:none">
+
+<h2>Wallets</h2>
+
+<div class="grid">
+
+<div class="card">USD: $<span id="usd"></span></div>
+<div class="card">EUR: €<span id="eur"></span></div>
+<div class="card">BTC: <span id="btc"></span></div>
+
+</div>
+
+</div>
+
+<div id="deposit" class="dashpage" style="display:none">
+
+<h2>Deposit</h2>
+
+<input id="depositAmount" placeholder="Amount">
+
+<button onclick="deposit()">Add Funds</button>
+
+</div>
+
+<div id="transfer" class="dashpage" style="display:none">
+
+<h2>Send Money</h2>
+
+<input id="recipient" placeholder="Recipient">
+<input id="amount" placeholder="Amount">
+
+<button onclick="send()">Send</button>
+
+</div>
+
+<div id="invest" class="dashpage" style="display:none">
+
+<h2>Investments</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Stocks</h3>
+
+<p>$<span id="stocks"></span></p>
+
+<button onclick="invest('stocks')">Buy $100</button>
+
+</div>
+
+<div class="card">
+
+<h3>Crypto</h3>
+
+<p>$<span id="crypto"></span></p>
+
+<button onclick="invest('crypto')">Buy $100</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="cards" class="dashpage" style="display:none">
+
+<h2>Virtual Card</h2>
+
+<div class="cardDisplay">
+
+<h3>NovaVault</h3>
+
+<p id="cardNumber"></p>
+<p id="cardExpiry"></p>
+
+</div>
+
+</div>
+
+<div id="activity" class="dashpage" style="display:none">
+
+<h2>Activity</h2>
+
+<ul id="txList" class="transactions"></ul>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+<p>© 2026 NovaVault</p>
+
+</footer>
+
+<script>
+
+let user = JSON.parse(localStorage.getItem("novaUser")) || null
+
+function show(id){
+
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+document.getElementById(id).classList.add("active")
+
+}
+
+function signup(){
+
+user={
+email:signupEmail.value,
+pass:signupPass.value,
+usd:2000,
+eur:500,
+btc:0.02,
+stocks:0,
+crypto:0,
+transactions:[],
+card:{
+number:"**** **** **** "+Math.floor(1000+Math.random()*9000),
+expiry:"12/29"
+}
+}
+
+save()
+load()
+show("dashboard")
+
+}
+
+function login(){
+
+const saved=JSON.parse(localStorage.getItem("novaUser"))
+
+if(saved && saved.email===loginEmail.value && saved.pass===loginPass.value){
+
+user=saved
+load()
+show("dashboard")
+
+}else alert("Invalid login")
+
+}
+
+function save(){
+
+localStorage.setItem("novaUser",JSON.stringify(user))
+
+}
+
+function load(){
+
+usd.innerText=user.usd
+eur.innerText=user.eur
+btc.innerText=user.btc
+stocks.innerText=user.stocks
+crypto.innerText=user.crypto
+
+balance.innerText="$"+user.usd
+
+cardNumber.innerText=user.card.number
+cardExpiry.innerText=user.card.expiry
+
+updateTx()
+updateChart()
+
+}
+
+function deposit(){
+
+let amount=Number(depositAmount.value)
+
+if(amount<=0)return
+
+user.usd+=amount
+user.transactions.push("Deposit $"+amount)
+
+save()
+load()
+
+}
+
+function send(){
+
+let amount=Number(document.getElementById("amount").value)
+
+if(amount>user.usd){
+
+alert("Insufficient funds")
+return
+
+}
+
+user.usd-=amount
+
+user.transactions.push("Sent $"+amount+" to "+recipient.value)
+
+save()
+load()
+
+}
+
+function invest(type){
+
+if(user.usd<100){
+
+alert("Insufficient funds")
+return
+
+}
+
+user.usd-=100
+user[type]+=100
+
+user.transactions.push("Invested $100 in "+type)
+
+save()
+load()
+
+}
+
+function updateTx(){
+
+txList.innerHTML=""
+
+user.transactions.forEach(t=>{
+
+let li=document.createElement("li")
+li.innerText=t
+txList.appendChild(li)
+
+})
+
+}
+
+function updateChart(){
+
+chart.innerHTML=""
+
+for(let i=0;i<12;i++){
+
+let bar=document.createElement("div")
+
+bar.className="bar"
+
+bar.style.height=(Math.random()*180+20)+"px"
+
+chart.appendChild(bar)
+
+}
+
+}
+
+function dash(p){
+
+document.querySelectorAll(".dashpage").forEach(d=>d.style.display="none")
+
+document.getElementById(p).style.display="block"
+
+}
+
+function logout(){
+
+localStorage.removeItem("novaUser")
+
+show("home")
+
+}
+
+function toggleTheme(){
+
+document.body.classList.toggle("light")
+
+}
+
+</script>
+
+</body>
+</html>
